@@ -7,6 +7,7 @@ type AppInfo struct {
 	Environment string `json:"environment"`
 	PodName     string `json:"pod_name"`
 	NodeName    string `json:"node_name"`
+	HostIP      string `json:"host_ip"`
 	GoVersion   string `json:"go_version"`
 	Uptime      string `json:"uptime"`
 }

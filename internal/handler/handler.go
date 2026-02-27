@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"net"
 	"net/http"
 	"runtime"
 	"time"
@@ -63,9 +64,23 @@ func (h *Handler) buildInfo() model.AppInfo {
 		Environment: h.cfg.Environment,
 		PodName:     h.cfg.PodName,
 		NodeName:    h.cfg.NodeName,
+		HostIP:      getHostIP(),
 		GoVersion:   runtime.Version(),
 		Uptime:      formatUptime(time.Since(h.startTime)),
 	}
+}
+
+func getHostIP() string {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return "unknown"
+	}
+	for _, addr := range addrs {
+		if ipnet, ok := addr.(*net.IPNet); ok && !ipnet.IP.IsLoopback() && ipnet.IP.To4() != nil {
+			return ipnet.IP.String()
+		}
+	}
+	return "unknown"
 }
 
 func formatUptime(d time.Duration) string {
