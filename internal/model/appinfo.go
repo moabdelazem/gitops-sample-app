@@ -10,4 +10,5 @@ type AppInfo struct {
 	HostIP      string `json:"host_ip"`
 	GoVersion   string `json:"go_version"`
 	Uptime      string `json:"uptime"`
+	RequestCount int64  `json:"request_count"`
 }
