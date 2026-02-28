@@ -1,6 +1,15 @@
 # GitOps Sample App
 
-Inspired by this playlist [GitOps and K8s بالعربي](https://www.youtube.com/playlist?list=PLTRDUPO2OmInz2Fo41zwnoR1IArx70Hig).
+Inspired by this awesome playlist [GitOps and K8s بالعربي](https://www.youtube.com/playlist?list=PLTRDUPO2OmInz2Fo41zwnoR1IArx70Hig).
+
+## Table of Contents
+
+- [Main Challenges](#main-challenges)
+- [Prerequisites](#prerequisites)
+- [Application Endpoints](#application-endpoints)
+- [The CI Workflow](#the-ci-workflow)
+- [The Manifests](#the-manifests)
+- [Further Reading](#further-reading)
 
 ## Main Challenges
 
