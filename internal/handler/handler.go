@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"runtime"
+	"sync/atomic"
 	"time"
 
 	"github.com/moabdelazem/gitops-sample-app/internal/config"
@@ -16,9 +17,10 @@ import (
 )
 
 type Handler struct {
-	cfg       *config.Config
-	tmpl      *template.Template
-	startTime time.Time
+	cfg          *config.Config
+	tmpl         *template.Template
+	startTime    time.Time
+	requestCount atomic.Int64
 }
 
 func New(cfg *config.Config, tmpl *template.Template) *Handler {
@@ -36,6 +38,7 @@ func (h *Handler) Register(mux *http.ServeMux) {
 }
 
 func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
+	h.requestCount.Add(1)
 	info := h.buildInfo()
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := h.tmpl.Execute(w, info); err != nil {
@@ -58,15 +61,16 @@ func (h *Handler) APIInfo(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) buildInfo() model.AppInfo {
 	return model.AppInfo{
-		Version:     version.Version,
-		GitCommit:   version.GitCommit,
-		BuildTime:   version.BuildTime,
-		Environment: h.cfg.Environment,
-		PodName:     h.cfg.PodName,
-		NodeName:    h.cfg.NodeName,
-		HostIP:      getHostIP(),
-		GoVersion:   runtime.Version(),
-		Uptime:      formatUptime(time.Since(h.startTime)),
+		Version:      version.Version,
+		GitCommit:    version.GitCommit,
+		BuildTime:    version.BuildTime,
+		Environment:  h.cfg.Environment,
+		PodName:      h.cfg.PodName,
+		NodeName:     h.cfg.NodeName,
+		HostIP:       getHostIP(),
+		GoVersion:    runtime.Version(),
+		Uptime:       formatUptime(time.Since(h.startTime)),
+		RequestCount: h.requestCount.Load(),
 	}
 }
 
